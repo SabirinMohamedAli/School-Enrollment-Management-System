@@ -1,94 +1,46 @@
-// const express = require('express');
-// const { register, login } = require('../controllers/authController');
-// const router = express.Router();
+const express = require("express");
+const {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+} = require("../controllers/authController");
+const { protect } = require("../middleware/authMiddleware");
 
-// router.post('/register', register);
-// router.post('/login', login);
-
-// module.exports = router;
-
-const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-// Register a new user
-router.post('/register', async (req, res) => {
-  const { fullName, email, password, role } = req.body;
+// @desc Register a new user
+// @route POST /api/users/register
+router.post("/register", registerUser);
 
-  // Validate input fields
-  if (!fullName || !email || !password) {
-    return res.status(400).json({ message: 'Please fill all the fields' });
-  }
+// @desc Login a user
+// @route POST /api/users/login
+router.post("/login", loginUser);
 
-  try {
-    // Check if user already exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+// @desc Get user profile
+// @route GET /api/users/profile
+// @access Private
+router.get("/profile", protect, getUserProfile);
 
-    // Create new user
-    const user = await User.create({
-      fullName,
-      email,
-      password,
-      role,
-    });
+// @desc Update user profile
+// @route PUT /api/users/profile
+// @access Private
+router.put("/profile", protect, updateUserProfile);
 
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error during registration' });
-  }
-});
+// @desc Logout user
+// @route GET /api/users/logout
+// @access Private
+router.get("/logout", protect, logoutUser);
 
-// Login user
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+// @desc Forgot Password
+// @route POST /api/users/forgot-password
+router.post("/forgot-password", forgotPassword);
 
-  // Validate input fields
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Please fill all the fields' });
-  }
-
-  try {
-    // Check if user exists
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Check if password matches
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error during login' });
-  }
-});
+// @desc Reset Password
+// @route POST /api/users/reset-password
+router.post("/reset-password", resetPassword);
 
 module.exports = router;
-
-   
