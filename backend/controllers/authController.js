@@ -1,9 +1,8 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const asyncHandler = require('express-async-handler');
-const validator = require('validator');
-
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const asyncHandler = require("express-async-handler");
+const validator = require("validator");
 
 // Create token
 const createToken = (id) => {
@@ -15,7 +14,7 @@ const createToken = (id) => {
 // @desc Register a new user
 // @route POST /api/users/register
 // @access Public
-export const registerUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password, role } = req.body;
   if (!fullName || !email || !password || !role) {
     return res.status(400).json({
@@ -28,12 +27,16 @@ export const registerUser = asyncHandler(async (req, res) => {
     // Check if user already exists
     const exists = await User.findOne({ email });
     if (exists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
     }
 
     // Validate email format & strong password
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ success: false, message: "Please enter a valid email" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Please enter a valid email" });
     }
 
     // Hashing user password
@@ -69,7 +72,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 // @desc Authenticate a user
 // @route POST /api/users/login
 // @access Public
-export const loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // Validate input
@@ -90,15 +93,16 @@ export const loginUser = asyncHandler(async (req, res) => {
       token: createToken(user.id),
     });
   } else {
-    res.status(401);
-    throw new Error("Invalid email or password");
+    res
+      .status(401)
+      .json({ success: false, message: "Invalid email or password" });
   }
 });
 
 // @desc Get user profile
 // @route GET /api/users/profile
 // @access Private
-export const getUserProfile = asyncHandler(async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
 
   if (user) {
@@ -117,7 +121,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 // @desc Update user profile
 // @route PUT /api/users/profile
 // @access Private
-export const updateUserProfile = asyncHandler(async (req, res) => {
+const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
 
   if (user) {
@@ -148,7 +152,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 // @desc Logout user
 // @route GET /api/users/logout
 // @access Private
-export const logoutUser = asyncHandler(async (req, res) => {
+const logoutUser = asyncHandler(async (req, res) => {
   try {
     res.status(200).json({ status: true, message: "User logged out" });
   } catch (err) {
@@ -157,7 +161,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
 });
 
 //* FORGOT PASSWORD (Generate OTP)
-export const forgotPassword = asyncHandler(async (req, res) => {
+const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   // Find user by email
@@ -177,7 +181,9 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   // Log OTP and expiration time for debugging purposes
   console.log(`Generated OTP: ${otp}`);
-  console.log(`OTP expiration time: ${new Date(otpExpirationTime).toISOString()}`);
+  console.log(
+    `OTP expiration time: ${new Date(otpExpirationTime).toISOString()}`
+  );
 
   // Send OTP via email
   await sendPasswordResetEmail(user, otp); // Now sending OTP instead of token
@@ -189,7 +195,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 //* RESET PASSWORD (Verify OTP and reset password)
-export const resetPassword = asyncHandler(async (req, res) => {
+const resetPassword = asyncHandler(async (req, res) => {
   const { otp, newPassword } = req.body;
 
   try {
@@ -247,3 +253,13 @@ export const resetPassword = asyncHandler(async (req, res) => {
     });
   }
 });
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+};
