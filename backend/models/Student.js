@@ -1,46 +1,21 @@
-// models/Student.js
 const mongoose = require('mongoose');
 
-const StudentSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please add the student\'s name'],
-  },
-  dateOfBirth: {
-    type: Date,
-    required: [true, 'Please add the student\'s date of birth'],
-  },
-  grade: {
-    type: String,
-    required: [true, 'Please add the grade/class'],
-  },
+const studentSchema = new Schema({
+  fullName: { type: String, required: true },
+  dateOfBirth: { type: Date, required: true },
+  grade: { type: String, required: true },
   contactInfo: {
-    parentName: {
-      type: String,
-      required: true,
-    },
-    parentContact: {
-      type: String,
-      required: true,
-    },
+    parentName: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
   },
-  address: {
-    type: String,
-    required: true,
-  },
-  enrollmentStatus: {
-    type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending',
-  },
-  documents: {
-    birthCertificate: {
-      type: String, // File URL or path
-    },
-    transferCertificate: {
-      type: String, // File URL or path
-    },
-  },
-});
+  address: { type: String, required: true },
+  enrollmentStatus: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
+  documents: [{
+    name: { type: String },
+    url: { type: String },
+    uploadedAt: { type: Date, default: Date.now },
+  }],
+}, { timestamps: true });
 
-module.exports = mongoose.model('Student', StudentSchema);
+module.exports = mongoose.model('Student', studentSchema);
