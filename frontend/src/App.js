@@ -1,63 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Dashboard from './pages/Dashboard';
-import Students from './pages/Students';
-import Enrollment from './pages/Enrollment';
-import Settings from './pages/Settings';
-import Login from './pages/LoginForm';
-import { getAuthToken } from './utils/auth';
-import PrivateRoute from './components/PrivateRoute';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login"; // Import Login page
+import Registration from "./pages/Registration"; // Import Registration page
+import Home from "./pages/Home"; // Import Home page if needed
+import "./App.css"; // Optional for additional global styles
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Check if user is authenticated (using token or other logic)
-    const token = getAuthToken();
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
+const App = () => {
   return (
     <Router>
-      <div className="flex">
-        {/* Sidebar */}
-        {isAuthenticated && <Sidebar />}
-        {/* Main content area */}
-        <div className="flex-1">
-          <Routes>
-            {/* Redirect root path ("/") to login or dashboard */}
-            <Route
-              path="/"
-              element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/dashboard"
-              element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />}
-            />
-            <Route
-              path="/students"
-              element={<PrivateRoute element={<Students />} isAuthenticated={isAuthenticated} />}
-            />
-            <Route
-              path="/enrollment"
-              element={<PrivateRoute element={<Enrollment />} isAuthenticated={isAuthenticated} />}
-            />
-            <Route
-              path="/settings"
-              element={<PrivateRoute element={<Settings />} isAuthenticated={isAuthenticated} />}
-            />
-            <Route
-              path="/login"
-              element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />}
-            />
-          </Routes>
-        </div>
-      </div>
+      <Routes>
+        {/* Home route */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+
+        
+        {/* Registration page route */}
+        <Route path="/register" element={<Registration />} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;

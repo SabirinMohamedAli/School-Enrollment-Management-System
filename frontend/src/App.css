@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+
+
+/* Global styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+}
+
+button {
+  cursor: pointer;
+}
+
+input, select {
+  transition: all 0.3s ease;
+}
