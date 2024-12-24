@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // For linking to the Login page
+import { Link, useNavigate } from "react-router-dom"; // For linking to the Login page
 import image from '../images/1.jpg'; // Import the image
 
 const Registration = () => {
@@ -7,18 +7,23 @@ const Registration = () => {
     fullName: "",
     email: "",
     password: "",
-    role: "Student",
+    role: "Student", // Default role
   });
 
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // For navigation after successful registration
 
+  // Handle form input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(""); // Clear error on input change
   };
 
-  const handleSubmit = (e) => {
+  // Handle form submission (registration)
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Validation
     if (!formData.fullName || !formData.email || !formData.password) {
       setError("All fields are required.");
       return;
@@ -27,9 +32,32 @@ const Registration = () => {
       setError("Password must be at least 6 characters long.");
       return;
     }
-    console.log("Registration data:", formData);
-    // Handle registration functionality
+  
+    try {
+      // Corrected API URL
+      const response = await fetch('http://localhost:5000/api/register', {  
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Registration successful:', data);
+        // Redirect to login page after successful registration
+        navigate('/login');
+      } else {
+        setError(data.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setError('Server error. Please try again later.');
+    }
   };
+  
 
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gradient-to-r from-[#b89e66] to-[#e4ad36]">
@@ -127,5 +155,3 @@ const Registration = () => {
 };
 
 export default Registration;
-
-
