@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import { FaEdit, FaTrash, FaPlus, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const Dashboard = () => {
   const [students, setStudents] = useState([]);
+  const navigate = useNavigate(); // Initialize navigate hook
 
   // Fetch data for students
   useEffect(() => {
@@ -135,9 +137,12 @@ const Dashboard = () => {
           </table>
         </div>
 
-        {/* Add New Student Button */}
+        {/* Add New Student Button with Navigation */}
         <div className="flex justify-end">
-          <button className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600">
+          <button
+            onClick={() => navigate('/students/new')} // Programmatically navigate to the new student page
+            className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600"
+          >
             <FaPlus className="mr-2" /> Add New Student
           </button>
         </div>

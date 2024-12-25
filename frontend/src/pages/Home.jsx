@@ -2,10 +2,11 @@ import React from 'react';import { FaUserLock, FaUserPlus, FaChalkboardTeacher, 
 
 import image from '../images/2.jpg'; // Import your images
 import ajay from '../images/4.jpg';
+import contactImage from '../images/6.jpg';
 
 const App = () => {
   return (
-    <div className="font-sans bg-gray-50 text-3xl" >
+    <div className="font-sans bg-gray-50 text-2xl" >
       {/* Navigation */}
       <nav className="flex justify-between items-center bg-orange-500 text-white p-4 sticky top-0 z-50">
         <div className="text-2xl font-bold">SmartEnroll</div>
@@ -21,16 +22,17 @@ const App = () => {
       {/* Main Section */}
 <div className="flex items-center justify-between p-12 gap-8 border-b-4 border-gray-300">
   <div className="text-section max-w-lg text-right mr-8 leading-tight">
-    <h1 className="text-8xl font-bold mb-8">SmartEnroll </h1>
-    <h1 className="text-7xl font-bold ml-12 text-orange-500">Scool </h1>
+    <h1 className="text-6xl font-bold mb-8">SmartEnroll </h1>
+    <h1 className="text-5xl font-bold ml-[-7] text-orange-500 "> high Shcool </h1>
 
-    <h2 className="text-5xl font-bold mb-4">Take your career to the next level.</h2>
+    <h2 className="text-4xl font-bold mb-4">Take your career to the next level </h2>
+    <h1 className="text-5xl font-bold ml-12 text-orange-500 "> Our school is where your dreams begin. </h1>
     <p className="text-3xl mb-6">With indispensable courses</p>
     <div className="flex mt-6 justify-end">
       <button className="bg-orange-500 px-10 py-4 rounded-xl font-bold hover:bg-gray-800 text-white mr-4 text-lg">
         Exams
       </button>
-      <button className="bg-transparent px-10 py-4 rounded-xl font-bold hover:bg-gray-800 hover:text-white text-gray-800 text-lg bg-green-500">
+      <button className=" px-10 py-4 rounded-xl font-bold hover:bg-gray-800 hover:bg-orange-500 text-white text-lg bg-gray-800">
         Our Courses
       </button>
     </div>
@@ -47,13 +49,16 @@ const App = () => {
         <h2 className="text-6xl mb-8 text-center font-bold text-gray-800">About Us</h2>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-10 px-6">
           <div>
-            <img className="w-full h-[500px] object-cover rounded-xl shadow-lg mr-[30px]" src={ajay} alt="School Environment" />
+            <img className="w-[full] h-[500px] object-cover rounded-xl shadow-lg mr-[30px]" src={ajay} alt="School Environment" />
           </div>
           <div className="text-left">
             <h1 className="text-5xl font-bold text-gray-900 leading-tight">Welcome to Our School</h1>
             <h2 className='text-orange-500 text-4xl'>Where Learning Meets Excellence</h2>
             <p className="text-lg text-gray-700 mt-6 leading-relaxed">
-              Our school is dedicated to providing a nurturing environment where students can excel academically, socially, and personally.
+            Welcome to Our School
+        Where Learning Meets Excellence
+         Our school is dedicated to providing a nurturing environment where students can excel academically, socially, and personally.
+            Join us on this exciting journey of discovery and transformation.
             </p>
             <p className="text-lg text-gray-700 mt-4 leading-relaxed">
               Join us on this exciting journey of discovery and transformation.
@@ -231,21 +236,33 @@ const App = () => {
         </div>
       </section>
 
-       {/* Contact Section */}
-       <section id="contact" className="py-16 bg-white-800 text-black">
-        <h2 className="text-6xl font-bold text-center mb-6 ">Contact Us</h2>
-        <div className="max-w-6xl mx-auto text-center px-4">
-          <p className="text-lg mb-8">Have any questions or need assistance? Get in touch with us today!</p>
-          <form className="max-w-lg mx-auto">
-            <input type="text" className="w-full p-4 mb-4 rounded-xl text-black-800" placeholder="Your Name" />
-            <input type="email" className="w-full p-4 mb-4 rounded-xl text-gray-800" placeholder="Your Email" />
-            <textarea className="w-full p-4 mb-4 rounded-xl text-gray-800" placeholder="Your Message"></textarea>
-            <button type="submit" className="bg-orange-500 px-8 py-4 rounded-xl text-white font-bold hover:bg-orange-600 transition">
-              Send Message
-            </button>
-          </form>
-        </div>
-      </section>
+  
+
+
+{/* Contact Section */}
+<section id="contact" className="py-16 bg-white-800 text-black">
+  <h2 className="text-6xl font-bold text-center mb-6">Contact Us</h2>
+  <div className="max-w-6xl mx-auto text-center px-4 flex items-center justify-between">
+    {/* Left Side (Image) */}
+    <div className="w-1/2">
+      <img src={contactImage} alt="Contact Us" className="w-[full] h-[500px] object-cover rounded-xl shadow-lg ml-1" />
+    </div>
+    
+    {/* Right Side (Form) */}
+    <div className="w-1/2">
+      <p className="text-lg mb-8">Have any questions or need assistance? Get in touch with us today!</p>
+      <form className="max-w-lg mx-auto">
+        <input type="text" className="w-full p-4 mb-4 rounded-xl text-black-800" placeholder="Your Name" />
+        <input type="email" className="w-full p-4 mb-4 rounded-xl text-gray-800" placeholder="Your Email" />
+        <textarea className="w-full p-4 mb-4 rounded-xl text-gray-800" placeholder="Your Message"></textarea>
+        <button type="submit" className="bg-orange-500 px-8 py-4 rounded-xl text-white font-bold hover:bg-orange-600 transition">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
 
 
        {/* Footer Section */}

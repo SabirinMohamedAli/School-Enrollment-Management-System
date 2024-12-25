@@ -1,55 +1,23 @@
-// const express = require('express');
-// const dotenv = require('dotenv');
-// const connectDB = require('./config/db');
-// const userRoutes = require('./routes/authRoutes');
-
-// dotenv.config();
-
-// // Connect to the database
-// connectDB();
-
-// const app = express();
-
-// // Middleware
-// app.use(express.json()); // To parse JSON bodies
-
-
-// // Routes
-// app.use('/api/users', userRoutes);
-
-// // Error Handling Middleware
-// // app.use((err, req, res, next) => {
-// //   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-// //   res.status(statusCode);
-// //   res.json({
-// //     message: err.message,
-// //     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
-// //   });
-// // });
-
-// // Start the server
-// const PORT = 5000;
-// app.listen(PORT, () =>
-//   console.log(`Server running in mode on port ${PORT}`)
-// );
-
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const studentRoutes = require('./routes/studentRoutes'); // Import student routes
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/politicaly', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/schoolDB')
+  .then(() => {
+    console.log('Database connected successfully');
+  })
+  .catch((error) => {
+    console.error('Error connecting to the database:', error);
+  });
+
 
 // Admin Schema
 const adminSchema = new mongoose.Schema({
@@ -92,5 +60,11 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+// Use the student routes
+app.use('/api/student', studentRoutes); 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+
+
+

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const studentSchema = new Schema({
   fullName: { type: String, required: true },
@@ -11,11 +12,6 @@ const studentSchema = new Schema({
   },
   address: { type: String, required: true },
   enrollmentStatus: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
-  documents: [{
-    name: { type: String },
-    url: { type: String },
-    uploadedAt: { type: Date, default: Date.now },
-  }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Student', studentSchema);

@@ -1,10 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login"; // Import Login page
-import Registration from "./pages/Registration"; // Import Registration page
-import Home from "./pages/Home"; // Import Home page if needed
-import Dashboard from "./pages/Dashboard"; // Import Admin Dashboard page
-import "./App.css"; // Optional for additional global styles
+import Login from "./pages/Login"; 
+import Registration from "./pages/Registration"; 
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard"; 
+import StudentForm from './components/StudentForm';
+import StudentsTable from './components/StudentsTable';
+import StudentsPage from './components/StudentsPage';  // Diiwaankaaga students
+
+import "./App.css";
 
 const App = () => {
   return (
@@ -20,9 +24,15 @@ const App = () => {
         <Route path="/register" element={<Registration />} />
 
         {/* Admin Dashboard route */}
-         <Route path="/Dashboard" element={<Dashboard />} />
-
+        <Route path="/Dashboard" element={<Dashboard />} />
         
+        {/* Students routes */}
+        <Route path="/students" element={<StudentsPage />} />
+        <Route path="/students/edit/:id" element={<StudentForm />} />
+        <Route path="/students/add" element={<StudentForm />} /> {/* Add student route */}
+        
+        {/* Optionally, a route for the students table */}
+        <Route path="/students/list" element={<StudentsTable />} />
       </Routes>
     </Router>
   );
