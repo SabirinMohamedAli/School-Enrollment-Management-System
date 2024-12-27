@@ -57,7 +57,8 @@ const Dashboard = () => {
         <nav>
           <ul>
             <li><a href="/dashboard" className="block py-2 mb-2">Dashboard</a></li>
-            <li><a href="/UsersTable" className="block py-2 mb-2">Users</a></li>
+            <li><a href="/users" className="block py-2 mb-2">Users</a></li>
+
             <li><a href="/courses" className="block py-2 mb-2">Courses</a></li>
             <li><a href="/students" className="block py-2 mb-2">Students</a></li>
             <li><a href="/parents" className="block py-2 mb-2">Parents</a></li>
