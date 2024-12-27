@@ -26,41 +26,55 @@
 
 // routes/studentRoutes.js
 const express = require('express');
-const Student = require('../models/Student');  // Import the Student model
+const Student = require('../models/User'); // Import the Student model
+
 const router = express.Router();
 
-// Add student route
-router.post('/', async (req, res) => {
-  const { fullName, dateOfBirth, grade, parentName, phone, email, address } = req.body;
-  
-  try {
-    const newStudent = new Student({
-      fullName,
-      dateOfBirth,
-      grade,
-      parentName,
-      phone,
-      email,
-      address,
-    });
-
-    await newStudent.save();
-    res.status(201).json(newStudent);
-  } catch (error) {
-    console.error('Error adding student:', error);  // Log the error for debugging
-    res.status(500).json({ message: 'Failed to add student. Please try again later.' });
-  }
+// Fetch all students
+router.get('/', async (req, res) => {
+    try {
+        const students = await Student.find();
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching students' });
+    }
 });
 
-// Get all students route
-router.get('/', async (req, res) => {
-  try {
-    const students = await Student.find();
-    res.json(students);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch students.' });
-  }
+// Add a new student
+router.post('/', async (req, res) => {
+    const { fullName, email, role } = req.body;
+    try {
+        const newStudent = new Student({ fullName, email, role });
+        await newStudent.save();
+        res.status(201).json({ message: 'Student added successfully', student: newStudent });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding student' });
+    }
+});
+
+// Update a student
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { fullName, email, role } = req.body;
+    try {
+        const updatedStudent = await Student.findByIdAndUpdate(id, { fullName, email, role }, { new: true });
+        res.json({ message: 'Student updated successfully', student: updatedStudent });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating student' });
+    }
+});
+
+// Delete a student
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Student.findByIdAndDelete(id);
+        res.json({ message: 'Student deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting student' });
+    }
 });
 
 module.exports = router;
+
 

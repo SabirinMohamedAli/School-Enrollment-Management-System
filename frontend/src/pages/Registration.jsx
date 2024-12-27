@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // For linking to the Login page
-import image from '../images/1.jpg'; // Import the image
+import image from '../images/10.png'; // Import the image
 
 const Registration = () => {
   const [formData, setFormData] = useState({
@@ -60,21 +60,21 @@ const Registration = () => {
   
 
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-r from-[#b89e66] to-[#e4ad36]">
+    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-r from-[#F5EFBD] via-[#59B8C3] to-[#2D8BA5]">
       {/* Form and Image Container */}
-      <div className="flex bg-[#eedbb2] p-12 rounded-9xl shadow-xl max-w-5xl w-full space-x-12">
+      <div className="flex bg-white p-12 rounded-xl shadow-xl max-w-5xl w-full space-x-12">
         
         {/* Image Section */}
         <div className="w-1/2">
           <img
             src={image}
             alt="Registration"
-            className="w-full h-full object-cover rounded-2xl shadow-lg"/>
+            className="w-full h-full object-cover rounded-l-xl shadow-lg"/>
         </div>
 
         {/* Form Section */}
-        <div className="w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-r from-[#d8a63a] to-[#be8642] text-white rounded-2xl">
-          <h1 className="text-4xl text-center font-extrabold mb-6 text-white">Create an Account</h1>
+        <div className="w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-r from-[#d8a63a] to-[#be8642] text-white rounded-r-xl">
+          <h1 className="text-4xl text-center font-extrabold mb-6">Create an Account</h1>
           
           {/* Display error message */}
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
@@ -88,7 +88,7 @@ const Registration = () => {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D8BA5] bg-white text-black"
                 placeholder="Enter your full name"
                 required
               />
@@ -101,7 +101,7 @@ const Registration = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D8BA5] bg-white text-black"
                 placeholder="Enter your email"
                 required
               />
@@ -114,29 +114,29 @@ const Registration = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D8BA5] bg-white text-black"
                 placeholder="Enter a strong password"
                 required
               />
             </div>
             
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-white">Role:</label>
+              <label htmlFor="role" className="block text-sm font-medium">Role:</label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-4 border-b-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D8BA5] bg-white text-black"
               >
-                <option value="Student" className="bg-blue-200">Student</option>
-                <option value="Parent" className="bg-blue-200">Parent</option>
-                <option value="Admin" className="bg-blue-200">Admin</option>
+                <option value="Student" className="text-black">Student</option>
+                <option value="Parent" className="text-black">Parent</option>
+                <option value="Admin" className="text-black">Admin</option>
               </select>
             </div>
             
             <button
               type="submit"
-              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 ease-in-out"
+              className="w-full py-3 bg-[#2D8BA5] text-white font-semibold rounded-lg hover:bg-[#184b5c] transition duration-200 ease-in-out"
             >
               Register
             </button>
