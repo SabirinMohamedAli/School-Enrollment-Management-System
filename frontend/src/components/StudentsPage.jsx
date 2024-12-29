@@ -17,7 +17,8 @@ const AddStudentForm = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/student');
+      const response = await fetch("http://localhost:5000/api/User");
+
       const data = await response.json();
       setStudents(data);
     } catch (error) {
