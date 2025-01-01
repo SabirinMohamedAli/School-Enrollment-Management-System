@@ -147,7 +147,18 @@ import StudentForm from './components/StudentForm';
 import StudentsTable from './components/StudentsTable';
 import StudentsPage from './components/StudentsPage';
 import UsersPage from './pages/UsersPage '; // Import UsersPage component
-import CoursesPage from './pages/Courses'; // Import CoursesPage
+import CoursesPage from './pages/CoursesPage'; // Import CoursesPage
+import SettingsPage from './pages/SettingsPage'; // Import SettingsPage
+import FeeManagement from './components/FeeManagement'; // Import FeeManagement
+// import StudentList from './components/StudentList'; // Import StudentList
+// import AddStudent from './components/AddStudent'; // Import AddStudent
+// import StudentManagement from './pages/StudentManagement'; // Import Student';
+//import StudentsPage from './components/StudentsPage';
+
+
+
+
+
 
 import "./App.css";
 
@@ -166,6 +177,8 @@ const App = () => {
 
         {/* Admin Dashboard route */}
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/students" element={<StudentsPage />} />
+
         
         {/* Students routes */}
         <Route path="/students" element={<StudentsPage />} />
@@ -178,6 +191,14 @@ const App = () => {
 
         {/* Courses route */}
         <Route path="/courses" element={<CoursesPage />} /> {/* Add the CoursesPage route */}
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/feemanagement" element={<FeeManagement />} />
+        {/* <Route path="/students" element={<StudentList />} /> */}
+        {/* <Route path="/addstudent" element={<AddStudent />} /> */}
+        {/* <Route path="/students" element={<StudentManagement />} /> */}
+
+
+
       </Routes>
     </Router>
   );

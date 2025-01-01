@@ -1,5 +1,591 @@
 // const express = require("express");
 // const mongoose = require("mongoose");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
+// const bcrypt = require('bcrypt'); // For hashing passwords
+// const jwt = require('jsonwebtoken'); // For generating tokens
+
+// const app = express(); 
+
+// app.use(bodyParser.json()); 
+// app.use(cors()); 
+
+// // MongoDB Connection
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/schooldb1")
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.error("Error connecting to MongoDB:", err));
+
+// // Import the User model
+// const User = require('./models/User');
+
+// // Import the Student model
+// const Student = require('./models/Student');
+
+// // Import the Course model
+// const Course = require('./models/Course');
+
+// // Import student routes
+// const studentRoutes = require('./routes/studentRoutes');
+
+// // Import course routes
+// const courseRoutes = require('./routes/courseRoutes');
+
+// // Login endpoint
+// app.post('/api/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+
+//     const token = jwt.sign({ id: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+//     res.status(200).json({ token, user: { email: user.email, role: user.role } });
+//   } catch (err) {
+//     console.error("Error logging in:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // PUT endpoint to update a user
+// app.put('/api/users/:id', async (req, res) => {
+//   const { fullName, email, role } = req.body;
+//   try {
+//     const user = await User.findByIdAndUpdate(req.params.id, {
+//       fullName,
+//       email,
+//       role
+//     }, { new: true });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json(user);
+//   } catch (err) {
+//     console.error("Error updating user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // DELETE endpoint to delete a user
+// app.delete('/api/users/:id', async (req, res) => {
+//   try {
+//     const user = await User.findByIdAndDelete(req.params.id);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json({ message: 'User deleted successfully' });
+//   } catch (err) {
+//     console.error("Error deleting user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // Endpoint to get all users
+// app.get("/api/users", async (req, res) => {
+//   try {
+//     const users = await User.find();
+//     res.json(users);
+//   } catch (err) {
+//     console.error("Error fetching users:", err);
+//     res.status(500).json({ message: "Server error." });
+//   }
+// });
+
+// // Use student routes
+// app.use('/api/students', studentRoutes);
+
+// // Use course routes
+// // server.js or app.js
+
+// // Import the Course model
+// // const Course = require('./models/Course');
+
+// // Endpoint to get all courses
+// app.get('/api/courses', async (req, res) => {
+//   try {
+//     const courses = await Course.find();
+//     res.json(courses);
+//   } catch (err) {
+//     console.error("Error fetching courses:", err);
+//     res.status(500).json({ message: "Error fetching courses" });
+//   }
+// });
+
+// // Server Listening
+// const PORT = 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+
+
+// const express = require("express");
+// const mongoose = require("mongoose");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
+// const bcrypt = require('bcrypt'); // For hashing passwords
+// const jwt = require('jsonwebtoken'); // For generating tokens
+
+// const app = express();
+
+// app.use(bodyParser.json());
+// app.use(cors());
+
+// // MongoDB Connection
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/schooldb1")
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.error("Error connecting to MongoDB:", err));
+
+// // Import models
+// const User = require('./models/User');
+// const Student = require('./models/Student');
+// const Course = require('./models/Course');
+
+// // Import routes
+// const studentRoutes = require('./routes/studentRoutes');
+// const courseRoutes = require('./routes/courseRoutes');
+// const feeRoutes = require('./routes/feeRoutes');
+
+// // Login endpoint
+// app.post('/api/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+
+//     const token = jwt.sign({ id: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+//     res.status(200).json({ token, user: { email: user.email, role: user.role } });
+//   } catch (err) {
+//     console.error("Error logging in:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // PUT endpoint to update a user
+// app.put('/api/users/:id', async (req, res) => {
+//   const { fullName, email, role } = req.body;
+//   try {
+//     const user = await User.findByIdAndUpdate(req.params.id, {
+//       fullName,
+//       email,
+//       role
+//     }, { new: true });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json(user);
+//   } catch (err) {
+//     console.error("Error updating user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // DELETE endpoint to delete a user
+// app.delete('/api/users/:id', async (req, res) => {
+//   try {
+//     const user = await User.findByIdAndDelete(req.params.id);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json({ message: 'User deleted successfully' });
+//   } catch (err) {
+//     console.error("Error deleting user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // Endpoint to get all users
+// app.get("/api/users", async (req, res) => {
+//   try {
+//     const users = await User.find();
+//     res.json(users);
+//   } catch (err) {
+//     console.error("Error fetching users:", err);
+//     res.status(500).json({ message: "Server error." });
+//   }
+// });
+
+// // Use routes
+// app.use('/api/students', studentRoutes);
+// app.use('/api/courses', courseRoutes);
+// app.use('/api/fee', feeRoutes);
+
+// // Server Listening
+// const PORT = 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+
+
+
+
+
+//3
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const bcrypt = require('bcrypt'); // For hashing passwords
+const jwt = require('jsonwebtoken'); // For generating tokens
+
+const app = express();
+
+app.use(bodyParser.json());
+app.use(cors());
+
+// MongoDB Connection
+mongoose
+  .connect("mongodb://127.0.0.1:27017/schooldb1")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
+
+// Import models
+const User = require('./models/User');
+const Student = require('./models/Student');
+const Course = require('./models/Course');
+
+// Import routes
+const studentRoutes = require('./routes/studentRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const feeRoutes = require('./routes/feeRoutes');
+
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+    res.status(200).json({ token, user: { email: user.email, role: user.role } });
+  } catch (err) {
+    console.error("Error logging in:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// PUT endpoint to update a user
+app.put('/api/users/:id', async (req, res) => {
+  const { fullName, email, role } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      fullName,
+      email,
+      role
+    }, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// DELETE endpoint to delete a user
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Endpoint to get all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ message: "Server error." });
+  }
+});
+
+// Use routes
+app.use('/api/students', studentRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/fee', feeRoutes);
+
+// Server Listening
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const express = require("express");
+// const mongoose = require("mongoose");
 // const bcrypt = require("bcryptjs");
 // const bodyParser = require("body-parser");
 // const cors = require("cors");
@@ -572,95 +1158,132 @@
 
 
 
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const bcrypt = require('bcrypt'); // For hashing passwords
-const jwt = require('jsonwebtoken'); // For generating tokens
 
-const app = express(); // Initialize app
 
-app.use(bodyParser.json()); // Parse JSON data
-app.use(cors()); // Enable CORS
 
-// MongoDB Connection
-mongoose
-  .connect("mongodb://127.0.0.1:27017/schooldb1")
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
-// Import the User model
-const User = require('./models/User');
 
-// Login endpoint
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
-    res.status(200).json({ token, user: { email: user.email, role: user.role } });
-  } catch (err) {
-    console.error("Error logging in:", err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
-// PUT endpoint to update a user
-app.put('/api/users/:id', async (req, res) => {
-  const { fullName, email, role } = req.body;
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, {
-      fullName,
-      email,
-      role
-    }, { new: true });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    console.error("Error updating user:", err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
-// DELETE endpoint to delete a user
-app.delete('/api/users/:id', async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json({ message: 'User deleted successfully' });
-  } catch (err) {
-    console.error("Error deleting user:", err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
-// Endpoint to get all users
-app.get("/api/users", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    console.error("Error fetching users:", err);
-    res.status(500).json({ message: "Server error." });
-  }
-});
 
-// Server Listening
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const express = require("express");
+// const mongoose = require("mongoose");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
+// const bcrypt = require('bcrypt'); // For hashing passwords
+// const jwt = require('jsonwebtoken'); // For generating tokens
+
+// const app = express(); 
+
+// app.use(bodyParser.json()); 
+// app.use(cors()); 
+
+// // MongoDB Connection
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/schooldb1")
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.error("Error connecting to MongoDB:", err));
+
+// // Import the User model
+// const User = require('./models/User');
+
+// // Import the Student model
+// const Student = require('./models/Student');
+
+// // Import student routes
+// const studentRoutes = require('./routes/studentRoutes');
+
+// // Login endpoint
+// app.post('/api/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+
+//     const token = jwt.sign({ id: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+//     res.status(200).json({ token, user: { email: user.email, role: user.role } });
+//   } catch (err) {
+//     console.error("Error logging in:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // PUT endpoint to update a user
+// app.put('/api/users/:id', async (req, res) => {
+//   const { fullName, email, role } = req.body;
+//   try {
+//     const user = await User.findByIdAndUpdate(req.params.id, {
+//       fullName,
+//       email,
+//       role
+//     }, { new: true });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json(user);
+//   } catch (err) {
+//     console.error("Error updating user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // DELETE endpoint to delete a user
+// app.delete('/api/users/:id', async (req, res) => {
+//   try {
+//     const user = await User.findByIdAndDelete(req.params.id);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json({ message: 'User deleted successfully' });
+//   } catch (err) {
+//     console.error("Error deleting user:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// // Endpoint to get all users
+// app.get("/api/users", async (req, res) => {
+//   try {
+//     const users = await User.find();
+//     res.json(users);
+//   } catch (err) {
+//     console.error("Error fetching users:", err);
+//     res.status(500).json({ message: "Server error." });
+//   }
+// });
+
+// // Use student routes
+// app.use('/api/students', studentRoutes);
+
+// // Server Listening
+// const PORT = 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });

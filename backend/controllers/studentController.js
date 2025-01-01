@@ -1,71 +1,176 @@
-const Student = require('../models/Student'); // Assuming you have a Student model
-const fs = require('fs');
-const path = require('path');
+// controllers/studentController.js
+const Student = require('../models/Student');
 
-// Add a new student
-const addStudent = async (req, res) => {
+// Get all students
+exports.getAllStudents = async (req, res) => {
   try {
-    const { name, email, course } = req.body;
-    const newStudent = new Student({ name, email, course });
-    await newStudent.save();
-    res.status(201).json(newStudent);
+    const students = await Student.find();
+    res.json(students);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to add student' });
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Upload student documents
-const uploadDocuments = (req, res) => {
-  try {
-    if (!req.files) {
-      return res.status(400).json({ message: 'No files uploaded' });
-    }
-
-    // Assuming you store the document names or paths
-    const documentPaths = req.files.map(file => file.path);
-
-    res.status(200).json({ message: 'Documents uploaded successfully', documents: documentPaths });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to upload documents' });
-  }
-};
-
-// Get a specific student by ID
-const getStudent = async (req, res) => {
+// Get student by ID
+exports.getStudentById = async (req, res) => {
   try {
     const student = await Student.findById(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
-    res.status(200).json(student);
+    res.json(student);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch student' });
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Update student enrollment status
-const updateEnrollmentStatus = async (req, res) => {
+// Create new student
+exports.createStudent = async (req, res) => {
+  const student = new Student({
+    fullName: req.body.fullName,
+    dateOfBirth: req.body.dateOfBirth,
+    grade: req.body.grade,
+    contactInformation: req.body.contactInformation,
+    address: req.body.address,
+    documents: req.body.documents,
+    enrollmentStatus: req.body.enrollmentStatus
+  });
+
   try {
-    const { status } = req.body; // Assuming the status is sent in the request body
-    const student = await Student.findByIdAndUpdate(
-      req.params.id,
-      { enrollmentStatus: status },
-      { new: true }
-    );
+    const newStudent = await student.save();
+    res.status(201).json(newStudent);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Update student
+exports.updateStudent = async (req, res) => {
+  try {
+    const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
-    res.status(200).json(student);
+    res.json(student);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to update enrollment status' });
+    res.status(400).json({ message: err.message });
   }
 };
 
-module.exports = { addStudent, uploadDocuments, getStudent, updateEnrollmentStatus };
+// Delete student
+exports.deleteStudent = async (req, res) => {
+  try {
+    const student = await Student.findByIdAndDelete(req.params.id);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    res.json({ message: 'Student deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const Student = require('../models/Student'); // Assuming you have a Student model
+// const fs = require('fs');
+// const path = require('path');
+
+// // Add a new student
+// const addStudent = async (req, res) => {
+//   try {
+//     const { name, email, course } = req.body;
+//     const newStudent = new Student({ name, email, course });
+//     await newStudent.save();
+//     res.status(201).json(newStudent);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Failed to add student' });
+//   }
+// };
+
+// // Upload student documents
+// const uploadDocuments = (req, res) => {
+//   try {
+//     if (!req.files) {
+//       return res.status(400).json({ message: 'No files uploaded' });
+//     }
+
+//     // Assuming you store the document names or paths
+//     const documentPaths = req.files.map(file => file.path);
+
+//     res.status(200).json({ message: 'Documents uploaded successfully', documents: documentPaths });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Failed to upload documents' });
+//   }
+// };
+
+// // Get a specific student by ID
+// const getStudent = async (req, res) => {
+//   try {
+//     const student = await Student.findById(req.params.id);
+//     if (!student) {
+//       return res.status(404).json({ message: 'Student not found' });
+//     }
+//     res.status(200).json(student);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Failed to fetch student' });
+//   }
+// };
+
+// // Update student enrollment status
+// const updateEnrollmentStatus = async (req, res) => {
+//   try {
+//     const { status } = req.body; // Assuming the status is sent in the request body
+//     const student = await Student.findByIdAndUpdate(
+//       req.params.id,
+//       { enrollmentStatus: status },
+//       { new: true }
+//     );
+//     if (!student) {
+//       return res.status(404).json({ message: 'Student not found' });
+//     }
+//     res.status(200).json(student);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Failed to update enrollment status' });
+//   }
+// };
+
+// module.exports = { addStudent, uploadDocuments, getStudent, updateEnrollmentStatus };
 
 
 

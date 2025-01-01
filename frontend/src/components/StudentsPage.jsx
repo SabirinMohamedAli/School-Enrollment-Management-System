@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { getAllStudents, createStudent, updateStudent, deleteStudent } from '../services/studentService';
+import { FaEdit, FaTrash, FaBars, FaUserGraduate, FaUser, FaBook, FaChartBar, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-const AddStudentForm = () => {
-  const [fullName, setFullName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [grade, setGrade] = useState('');
-  const [parentName, setParentName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
+const StudentsPage = () => {
   const [students, setStudents] = useState([]);
-  const [message, setMessage] = useState('');
+  const [newStudent, setNewStudent] = useState({
+    fullName: '',
+    dateOfBirth: '',
+    grade: '',
+    contactInformation: {
+      parentName: '',
+      parentPhoneNumber: '',
+      parentEmail: ''
+    },
+    address: '',
+    enrollmentStatus: 'Pending'
+  });
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [error, setError] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStudents();
@@ -17,186 +28,283 @@ const AddStudentForm = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/User");
-
-      const data = await response.json();
-      setStudents(data);
+      const response = await getAllStudents();
+      setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
+      setError('Failed to fetch students. Please try again later.');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const studentData = { fullName, dateOfBirth, grade, parentName, phone, email, address };
+    if (!validateForm()) return;
 
     try {
-      const response = await fetch('http://localhost:5000/api/student', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(studentData),
-      });
-
-      if (response.ok) {
-        setMessage('Student added successfully!');
-        fetchStudents();
-        resetForm();
+      if (editingStudent) {
+        await updateStudent(editingStudent._id, newStudent);
       } else {
-        setMessage('Failed to add student. Please try again later.');
+        await createStudent(newStudent);
       }
+      setNewStudent({
+        fullName: '',
+        dateOfBirth: '',
+        grade: '',
+        contactInformation: {
+          parentName: '',
+          parentPhoneNumber: '',
+          parentEmail: ''
+        },
+        address: '',
+        enrollmentStatus: 'Pending'
+      });
+      setEditingStudent(null);
+      fetchStudents();
     } catch (error) {
-      setMessage('Failed to add student. Please try again later.');
-      console.error('Error adding student:', error);
+      console.error('Error creating/updating student:', error);
+      setError('Failed to save student. Please try again later.');
     }
   };
 
-  const resetForm = () => {
-    setFullName('');
-    setDateOfBirth('');
-    setGrade('');
-    setParentName('');
-    setPhone('');
-    setEmail('');
-    setAddress('');
+  const validateForm = () => {
+    const { fullName, dateOfBirth, grade, contactInformation, address } = newStudent;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{7,15}$/;
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    const gradeRegex = /^[A-Fa-f0-9]+$/;
+
+    if (!nameRegex.test(fullName)) {
+      setError('Full Name must contain only letters and spaces.');
+      return false;
+    }
+    if (!dateOfBirth || new Date(dateOfBirth) > new Date()) {
+      setError('Valid Date of Birth is required.');
+      return false;
+    }
+    if (!gradeRegex.test(grade)) {
+      setError('Grade must be a valid grade.');
+      return false;
+    }
+    if (!nameRegex.test(contactInformation.parentName)) {
+      setError('Parent Name must contain only letters and spaces.');
+      return false;
+    }
+    if (!phoneRegex.test(contactInformation.parentPhoneNumber)) {
+      setError('Valid Parent Phone Number is required.');
+      return false;
+    }
+    if (!emailRegex.test(contactInformation.parentEmail)) {
+      setError('Valid Parent Email is required.');
+      return false;
+    }
+
+    // Check for existing email
+    const existingEmail = students.find(student => student.contactInformation.parentEmail === contactInformation.parentEmail);
+    if (existingEmail && (!editingStudent || existingEmail._id !== editingStudent._id)) {
+      setError('Parent Email already exists.');
+      return false;
+    }
+
+    if (!address) {
+      setError('Address is required.');
+      return false;
+    }
+    setError('');
+    return true;
+  };
+
+  const handleEdit = (student) => {
+    setNewStudent(student);
+    setEditingStudent(student);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteStudent(id);
+      fetchStudents();
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      setError('Failed to delete student. Please try again later.');
+    }
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">Add Student</h1>
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* Sidebar */}
+      <div className={`bg-gray-800 text-white h-screen p-5 lg:w-64 w-full lg:h-auto lg:fixed lg:overflow-y-auto ${sidebarOpen ? 'block' : 'hidden'} lg:block`}>
+        <h2 className="text-3xl font-bold mb-6 text-orange-500">Admin Dashboard</h2>
+        <nav>
+          <ul className="space-y-4">
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaUserGraduate className="sidebar-icon" />
+              <a href="/dashboard" className="sidebar-link">Dashboard</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaUser className="sidebar-icon" />
+              <a href="/users" className="sidebar-link">Users</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaBook className="sidebar-icon" />
+              <a href="/courses" className="sidebar-link">Courses</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaUserGraduate className="sidebar-icon" />
+              <a href="/students" className="sidebar-link">Students</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaBook className="sidebar-icon" />
+              <a href="/feemanagement" className="sidebar-link">Fee Management</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaChartBar className="sidebar-icon" />
+              <a href="/reports" className="sidebar-link">Reports</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaCog className="sidebar-icon" />
+              <a href="/settings" className="sidebar-link">Settings</a>
+            </li>
+            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+              <FaSignOutAlt className="sidebar-icon" />
+              <a href="/logout" className="sidebar-link">Logout</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
-        <div className="space-y-4">
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Full Name</label>
+      {/* Hamburger Icon for Mobile View */}
+      <div className="lg:hidden p-4">
+        <FaBars onClick={() => setSidebarOpen(!sidebarOpen)} className="text-2xl cursor-pointer text-gray-800" />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-8 bg-gray-100 lg:ml-64">
+        <h1 className="text-4xl font-semibold mb-8 text-orange-500">Students</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <form onSubmit={handleSubmit} className="mb-8 bg-white p-6 rounded-lg shadow-md">
+          <div className="mb-4">
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Full Name"
+              value={newStudent.fullName}
+              onChange={(e) => setNewStudent({ ...newStudent, fullName: e.target.value })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Date of Birth</label>
+          <div className="mb-4">
             <input
               type="date"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Date of Birth"
+              value={newStudent.dateOfBirth || (editingStudent && editingStudent.dateOfBirth)}
+              onChange={(e) => setNewStudent({ ...newStudent, dateOfBirth: e.target.value })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Grade</label>
+          <div className="mb-4">
             <input
               type="text"
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Grade"
+              value={newStudent.grade}
+              onChange={(e) => setNewStudent({ ...newStudent, grade: e.target.value })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Parent Name</label>
+          <div className="mb-4">
             <input
               type="text"
-              value={parentName}
-              onChange={(e) => setParentName(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Parent Name"
+              value={newStudent.contactInformation.parentName}
+              onChange={(e) => setNewStudent({ ...newStudent, contactInformation: { ...newStudent.contactInformation, parentName: e.target.value } })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Phone</label>
+          <div className="mb-4">
             <input
               type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Parent Phone Number"
+              value={newStudent.contactInformation.parentPhoneNumber}
+              onChange={(e) => setNewStudent({ ...newStudent, contactInformation: { ...newStudent.contactInformation, parentPhoneNumber: e.target.value } })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Email</label>
+          <div className="mb-4">
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Parent Email"
+              value={newStudent.contactInformation.parentEmail}
+              onChange={(e) => setNewStudent({ ...newStudent, contactInformation: { ...newStudent.contactInformation, parentEmail: e.target.value } })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-lg font-semibold text-gray-600">Address</label>
+          <div className="mb-4">
             <input
               type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="mt-2 p-3 border border-gray-300 rounded-lg"
+              placeholder="Address"
+              value={newStudent.address}
+              onChange={(e) => setNewStudent({ ...newStudent, address: e.target.value })}
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-
-          <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 mt-4">
-            Add Student
+          <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+            {editingStudent ? 'Update Student' : 'Add Student'}
           </button>
-        </div>
-      </form>
-
-      {message && (
-        <div className="mt-4 text-center text-lg text-green-500">
-          {message}
-        </div>
-      )}
-
-      <h2 className="text-2xl font-semibold text-gray-700 mt-8">Students List</h2>
-      {students.length === 0 ? (
-        <p className="mt-4 text-center text-gray-500">No students found.</p>
-      ) : (
-        <div className="overflow-x-auto mt-4">
-          <table className="min-w-full table-auto border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2 border border-gray-300">Full Name</th>
-                <th className="px-4 py-2 border border-gray-300">Date of Birth</th>
-                <th className="px-4 py-2 border border-gray-300">Grade</th>
-                <th className="px-4 py-2 border border-gray-300">Parent Name</th>
-                <th className="px-4 py-2 border border-gray-300">Phone</th>
-                <th className="px-4 py-2 border border-gray-300">Email</th>
-                <th className="px-4 py-2 border border-gray-300">Address</th>
-                <th className="px-4 py-2 border border-gray-300">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student._id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border border-gray-300">{student.fullName}</td>
-                  <td className="px-4 py-2 border border-gray-300">{new Date(student.dateOfBirth).toLocaleDateString()}</td>
-                  <td className="px-4 py-2 border border-gray-300">{student.grade}</td>
-                  <td className="px-4 py-2 border border-gray-300">{student.parentName}</td>
-                  <td className="px-4 py-2 border border-gray-300">{student.phone}</td>
-                  <td className="px-4 py-2 border border-gray-300">{student.email}</td>
-                  <td className="px-4 py-2 border border-gray-300">{student.address}</td>
-                  <td className="px-4 py-2 border border-gray-300">
-                    <button className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Edit</button>
-                    <button className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2">Delete</button>
-                  </td>
+        </form>
+        <h2 className="text-2xl font-semibold mb-4 text-orange-500">Students List</h2>
+        {students.length === 0 ? (
+          <p className="text-gray-500">No students found.</p>
+        ) : (
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Name</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Phone Number</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent Email</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {students.map((student) => (
+                  <tr key={student._id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student._id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.fullName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(student.dateOfBirth).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.grade}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.contactInformation.parentName || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.contactInformation.parentPhoneNumber || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.contactInformation.parentEmail || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.address}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button onClick={() => handleEdit(student)} className="text-blue-500 hover:text-blue-700">
+                        <FaEdit className="text-lg" />
+                      </button>
+                      <button onClick={() => handleDelete(student._id)} className="text-red-500 hover:text-red-700 ml-2">
+                        <FaTrash className="text-lg" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default AddStudentForm;
+export default StudentsPage;

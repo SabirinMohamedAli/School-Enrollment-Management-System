@@ -155,11 +155,294 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { Bar, Pie } from 'react-chartjs-2';
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
+// import {
+//   FaEdit, FaTrash, FaPlus, FaSignOutAlt, FaUserGraduate, FaUser, FaBook, FaChartBar, FaCog,
+// } from 'react-icons/fa';
+// import { useNavigate } from 'react-router-dom';
+
+// ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
+
+// const Dashboard = () => {
+//   const [students, setStudents] = useState([]);
+//   const [courses, setCourses] = useState([]);
+//   const [users, setUsers] = useState([]);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   const fetchData = async () => {
+//     try {
+//       const [studentsResponse, coursesResponse, usersResponse] = await Promise.all([
+//         fetch('/api/students'),
+//         fetch('/api/courses'),
+//         fetch('/api/users'),
+//       ]);
+
+//       if (!studentsResponse.ok) throw new Error(`Students API error: ${studentsResponse.status}`);
+//       if (!coursesResponse.ok) throw new Error(`Courses API error: ${coursesResponse.status}`);
+//       if (!usersResponse.ok) throw new Error(`Users API error: ${usersResponse.status}`);
+
+//       const studentsData = await studentsResponse.json();
+//       const coursesData = await coursesResponse.json();
+//       const usersData = await usersResponse.json();
+
+//       console.log('Students Data:', studentsData);
+//       console.log('Courses Data:', coursesData);
+//       console.log('Users Data:', usersData);
+
+//       setStudents(studentsData);
+//       setCourses(coursesData);
+//       setUsers(usersData);
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//     }
+//   };
+
+//   const totalStudents = students.length;
+//   const totalCourses = courses.length;
+//   const totalUsers = users.length;
+
+//   const barChartData = {
+//     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+//     datasets: [
+//       {
+//         label: 'New Enrollments',
+//         data: [12, 19, 3, 5, 2],
+//         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+//         borderColor: 'rgba(75, 192, 192, 1)',
+//         borderWidth: 1,
+//       },
+//     ],
+//   };
+
+//   const pieChartData = {
+//     labels: ['Admin', 'Student', 'Teacher'],
+//     datasets: [
+//       {
+//         data: [
+//           users.filter(user => user.role === 'Admin').length,
+//           users.filter(user => user.role === 'Student').length,
+//           users.filter(user => user.role === 'Teacher').length,
+//         ],
+//         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+//         hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+//       },
+//     ],
+//   };
+
+//   return (
+//     <div className="flex flex-col lg:flex-row">
+//       {/* Sidebar */}
+//       <div className="bg-gray-800 text-white h-screen p-5 lg:w-64  w-full lg:h-auto lg:fixed lg:overflow-y-auto">
+//         <h2 className="text-2xl font-bold mb-6 text-orange-500">Admin Dashboard</h2>
+//         <nav>
+//           <ul className="space-y-4">
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg text-orange-500" >
+//               <FaUserGraduate className="sidebar-icon" />
+//               <a href="/dashboard" className="sidebar-link">Dashboard</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg ">
+//               <FaUser className="sidebar-icon" />
+//               <a href="/users" className="sidebar-link">Users</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg text-orange-500">
+//               <FaBook className="sidebar-icon" />
+//               <a href="/courses" className="sidebar-link">Courses</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+//               <FaUserGraduate className="sidebar-icon" />
+//               <a href="/students" className="sidebar-link">Students</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+//               <FaChartBar className="sidebar-icon" />
+//               <a href="/reports" className="sidebar-link">Reports</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg text-orange-500">
+//               <FaCog className="sidebar-icon" />
+//               <a href="/settings" className="sidebar-link">Settings</a>
+//             </li>
+//             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
+//               <FaSignOutAlt className="sidebar-icon" />
+//               <a href="/logout" className="sidebar-link">Logout</a>
+//             </li>
+//           </ul>
+//         </nav>
+//       </div>
+
+//       {/* Main Dashboard Content */}
+//       <div className="flex-1 p-8 bg-gray-100 min-h-screen lg:ml-64">
+//         <div className="flex justify-between items-center mb-8">
+//           <h1 className="text-4xl font-semibold">Welcome to the Admin Dashboard</h1>
+//           <a href="/logout" className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 flex items-center">
+//             <FaSignOutAlt className="inline mr-2" /> Logout
+//           </a>
+//         </div>
+
+//         {/* Dashboard Stats */}
+//         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+//           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
+//             <h2 className="text-2xl font-semibold">Total Students</h2>
+//             <p className="text-4xl">{totalStudents}</p>
+//           </div>
+//           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
+//             <h2 className="text-2xl font-semibold">Total Courses</h2>
+//             <p className="text-4xl">{totalCourses}</p>
+//           </div>
+//           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
+//             <h2 className="text-2xl font-semibold">Total Users</h2>
+//             <p className="text-4xl">{totalUsers}</p>
+//           </div>
+//         </div>
+
+//         {/* Charts Section */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+//           <div className="bg-white p-6 rounded-lg shadow-md">
+//             <h3 className="text-2xl font-semibold mb-4">New Enrollments (Monthly)</h3>
+//             <div className="chart-container">
+//               <Bar data={barChartData} options={{ maintainAspectRatio: false }} />
+//             </div>
+//           </div>
+//           <div className="bg-white p-6 rounded-lg shadow-md">
+//             <h3 className="text-2xl font-semibold mb-4">Role Distribution</h3>
+//             <div className="chart-container">
+//               <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Users Table with Edit, Delete, Add Buttons */}
+//         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+//           <h3 className="text-2xl font-semibold mb-4">Users List</h3>
+//           <table className="min-w-full table-auto">
+//             <thead>
+//               <tr className="border-b">
+//                 <th className="px-4 py-2">Full Name</th>
+//                 <th className="px-4 py-2">Email</th>
+//                 <th className="px-4 py-2">Role</th>
+//                 <th className="px-4 py-2">Actions</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {users.map((user) => (
+//                 <tr key={user._id} className="border-b">
+//                   <td className="px-4 py-2">{user.fullName}</td>
+//                   <td className="px-4 py-2">{user.email}</td>
+//                   <td className="px-4 py-2">{user.role}</td>
+//                   <td className="px-4 py-2 flex space-x-2">
+//                     <button className="text-blue-500 hover:text-blue-700">
+//                       <FaEdit />
+//                     </button>
+//                     <button className="text-red-500 hover:text-red-700">
+//                       <FaTrash />
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+
+//         {/* Add New User Button with Navigation */}
+//         <div className="flex justify-end">
+//           <button
+//             onClick={() => navigate('/users/new')}
+//             className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600"
+//           >
+//             <FaPlus className="mr-2" /> Add New User
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Dashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import {
-  FaEdit, FaTrash, FaPlus, FaSignOutAlt, FaUserGraduate, FaUser, FaBook, FaUserTie, FaChartBar, FaCog,
+  FaEdit, FaTrash, FaPlus, FaSignOutAlt, FaUserGraduate, FaUser, FaBook, FaChartBar, FaCog, FaBars,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -167,19 +450,46 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 const Dashboard = () => {
   const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchStudents();
+    fetchData();
   }, []);
 
-  const fetchStudents = async () => {
-    const response = await fetch('/api/students');
-    const data = await response.json();
-    setStudents(data);
+  const fetchData = async () => {
+    try {
+      const [studentsResponse, coursesResponse, usersResponse] = await Promise.all([
+        fetch('/api/students'),
+        fetch('/api/courses'),
+        fetch('/api/users'),
+      ]);
+
+      if (!studentsResponse.ok) throw new Error(`Students API error: ${studentsResponse.status}`);
+      if (!coursesResponse.ok) throw new Error(`Courses API error: ${coursesResponse.status}`);
+      if (!usersResponse.ok) throw new Error(`Users API error: ${usersResponse.status}`);
+
+      const studentsData = await studentsResponse.json();
+      const coursesData = await coursesResponse.json();
+      const usersData = await usersResponse.json();
+
+      console.log('Students Data:', studentsData);
+      console.log('Courses Data:', coursesData);
+      console.log('Users Data:', usersData);
+
+      setStudents(studentsData);
+      setCourses(coursesData);
+      setUsers(usersData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
-  const totalEnrollments = students.length;
+  const totalStudents = students.length;
+  const totalCourses = courses.length;
+  const totalUsers = users.length;
 
   const barChartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
@@ -195,10 +505,10 @@ const Dashboard = () => {
   };
 
   const pieChartData = {
-    labels: ['Admin', 'Student', 'Parent'],
+    labels: ['Courses', 'Students', 'Users'],
     datasets: [
       {
-        data: [10, 60, 30],
+        data: [totalCourses, totalStudents, totalUsers],
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
         hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
@@ -208,7 +518,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className="bg-gray-800 text-white h-screen p-5 lg:w-64 w-full lg:h-auto lg:fixed lg:overflow-y-auto">
+      <div className={`bg-gray-800 text-white h-screen p-5 lg:w-64 w-full lg:h-auto lg:fixed lg:overflow-y-auto ${sidebarOpen ? 'block' : 'hidden'} lg:block`}>
         <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
         <nav>
           <ul className="space-y-4">
@@ -229,8 +539,8 @@ const Dashboard = () => {
               <a href="/students" className="sidebar-link">Students</a>
             </li>
             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
-              <FaUserTie className="sidebar-icon" />
-              <a href="/parents" className="sidebar-link">Parents</a>
+              <FaBook className="sidebar-icon" />
+              <a href="/feemanagement" className="sidebar-link">Fee Management</a>
             </li>
             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
               <FaChartBar className="sidebar-icon" />
@@ -248,6 +558,11 @@ const Dashboard = () => {
         </nav>
       </div>
 
+      {/* Hamburger Icon for Mobile View */}
+      <div className="lg:hidden p-4">
+        <FaBars onClick={() => setSidebarOpen(!sidebarOpen)} className="text-2xl cursor-pointer" />
+      </div>
+
       {/* Main Dashboard Content */}
       <div className="flex-1 p-8 bg-gray-100 min-h-screen lg:ml-64">
         <div className="flex justify-between items-center mb-8">
@@ -261,15 +576,15 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
             <h2 className="text-2xl font-semibold">Total Students</h2>
-            <p className="text-4xl">{students.length}</p>
+            <p className="text-4xl">{totalStudents}</p>
           </div>
           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
-            <h2 className="text-2xl font-semibold">Total Enrollments</h2>
-            <p className="text-4xl">{totalEnrollments}</p>
+            <h2 className="text-2xl font-semibold">Total Courses</h2>
+            <p className="text-4xl">{totalCourses}</p>
           </div>
           <div className="bg-orange-500 p-4 rounded-lg shadow-md text-white text-center">
-            <h2 className="text-2xl font-semibold">Total Admins</h2>
-            <p className="text-4xl">2</p>
+            <h2 className="text-2xl font-semibold">Total Users</h2>
+            <p className="text-4xl">{totalUsers}</p>
           </div>
         </div>
 
@@ -282,51 +597,11 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-semibold mb-4">Role Distribution</h3>
+            <h3 className="text-2xl font-semibold mb-4">Distribution</h3>
             <div className="chart-container">
               <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
             </div>
           </div>
-        </div>
-
-        {/* Students Table with Edit, Delete, Add Buttons */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Students List</h3>
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="border-b">
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student.id} className="border-b">
-                  <td className="px-4 py-2">{student.name}</td>
-                  <td className="px-4 py-2">{student.email}</td>
-                  <td className="px-4 py-2 flex space-x-2">
-                    <button className="text-blue-500 hover:text-blue-700">
-                      <FaEdit />
-                    </button>
-                    <button className="text-red-500 hover:text-red-700">
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Add New Student Button with Navigation */}
-        <div className="flex justify-end">
-          <button
-            onClick={() => navigate('/students/new')}
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600"
-          >
-            <FaPlus className="mr-2" /> Add New Student
-          </button>
         </div>
       </div>
     </div>
