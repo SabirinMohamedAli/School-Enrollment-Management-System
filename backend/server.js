@@ -255,16 +255,61 @@ mongoose
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 // Import models
+
 const User = require('./models/User');
 const Student = require('./models/Student');
 const Course = require('./models/Course');
 const Settings = require('./models/Settings');
 
 // Import routes
+const authRouter = require('./routes/authRoutes');
+
 const studentRoutes = require('./routes/studentRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const feeRoutes = require('./routes/feeRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+app.use('/api/users', authRouter);  // Auth routes
+
+
+// Registration endpoint
+app.post('/api/register', async (req, res) => {
+  const { fullName, email, password, role } = req.body;
+
+  // Validation
+  if (!fullName || !email || !password || !role) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+      role
+    });
+
+    // Save the user
+    const savedUser = await newUser.save();
+
+    // Generate a token
+    const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, 'your_jwt_secret', { expiresIn: '1h' });
+
+    res.status(201).json({ token, user: { email: savedUser.email, role: savedUser.role } });
+  } catch (err) {
+    console.error("Error registering user:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
@@ -331,17 +376,10 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 });
-// Import routes
-//const studentRoutes = require('./routes/studentRoutes');
-//const courseRoutes = require('./routes/courseRoutes');
 
 // Use routes
 app.use('/api/students', studentRoutes);  // Endpoint for students
 app.use('/api/courses', courseRoutes);    // Endpoint for courses
-
-// Use routes
-app.use('/api/students', studentRoutes);
-app.use('/api/courses', courseRoutes);
 app.use('/api/fee', feeRoutes);
 app.use('/api/settings', settingsRoutes);
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const StudentModel = require('../models/Student'); // Define your Student model
 
+
 // Get all students
 router.get('/', async (req, res) => {
   try {

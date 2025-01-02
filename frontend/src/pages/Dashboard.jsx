@@ -453,7 +453,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const [studentsResponse, coursesResponse, usersResponse] = await Promise.all([
-        axios.get('http://localhost:5000/api/students'),
+        fetch.get('http://localhost:5000/api/students'),
         fetch('/api/courses'),
         fetch('/api/users'),
       ]);
