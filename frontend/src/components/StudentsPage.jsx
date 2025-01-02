@@ -132,7 +132,7 @@ const StudentsPage = () => {
     <div className="flex flex-col lg:flex-row min-h-screen">
       {/* Sidebar */}
       <div className={`bg-gray-800 text-white h-screen p-5 lg:w-64 w-full lg:h-auto lg:fixed lg:overflow-y-auto ${sidebarOpen ? 'block' : 'hidden'} lg:block`}>
-        <h2 className="text-3xl font-bold mb-6 text-orange-500">Admin Dashboard</h2>
+        <h2 className="text-2xl font-bold mb-6 text-orange-500">Admin Dashboard</h2>
         <nav>
           <ul className="space-y-4">
             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">

@@ -428,23 +428,14 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import {
-  FaEdit, FaTrash, FaPlus, FaSignOutAlt, FaUserGraduate, FaUser, FaBook, FaChartBar, FaCog, FaBars,
+  FaEdit, FaTrash, FaPlus, FaUserGraduate, FaUser, FaBook, FaChartBar, FaBars, FaSignOutAlt,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
@@ -462,7 +453,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const [studentsResponse, coursesResponse, usersResponse] = await Promise.all([
-        fetch('/api/students'),
+        axios.get('http://localhost:5000/api/students'),
         fetch('/api/courses'),
         fetch('/api/users'),
       ]);
@@ -475,13 +466,16 @@ const Dashboard = () => {
       const coursesData = await coursesResponse.json();
       const usersData = await usersResponse.json();
 
-      console.log('Students Data:', studentsData);
-      console.log('Courses Data:', coursesData);
-      console.log('Users Data:', usersData);
+      // Log the data for debugging purposes
+      console.log('Fetched Students Data:', studentsData);
+      console.log('Fetched Courses Data:', coursesData);
+      console.log('Fetched Users Data:', usersData);
 
-      setStudents(studentsData);
-      setCourses(coursesData);
-      setUsers(usersData);
+      // Check if the data is valid before setting it to state
+      if (Array.isArray(studentsData)) setStudents(studentsData);
+      if (Array.isArray(coursesData)) setCourses(coursesData);
+      if (Array.isArray(usersData)) setUsers(usersData);
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -539,16 +533,8 @@ const Dashboard = () => {
               <a href="/students" className="sidebar-link">Students</a>
             </li>
             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
-              <FaBook className="sidebar-icon" />
-              <a href="/feemanagement" className="sidebar-link">Fee Management</a>
-            </li>
-            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
               <FaChartBar className="sidebar-icon" />
               <a href="/reports" className="sidebar-link">Reports</a>
-            </li>
-            <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
-              <FaCog className="sidebar-icon" />
-              <a href="/settings" className="sidebar-link">Settings</a>
             </li>
             <li className="flex items-center space-x-3 hover:bg-gray-700 p-2 rounded-lg">
               <FaSignOutAlt className="sidebar-icon" />
@@ -567,9 +553,6 @@ const Dashboard = () => {
       <div className="flex-1 p-8 bg-gray-100 min-h-screen lg:ml-64">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-semibold">Welcome to the Admin Dashboard</h1>
-          <a href="/logout" className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 flex items-center">
-            <FaSignOutAlt className="inline mr-2" /> Logout
-          </a>
         </div>
 
         {/* Dashboard Stats */}

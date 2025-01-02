@@ -258,11 +258,13 @@ mongoose
 const User = require('./models/User');
 const Student = require('./models/Student');
 const Course = require('./models/Course');
+const Settings = require('./models/Settings');
 
 // Import routes
 const studentRoutes = require('./routes/studentRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const feeRoutes = require('./routes/feeRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
@@ -329,19 +331,25 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 });
+// Import routes
+//const studentRoutes = require('./routes/studentRoutes');
+//const courseRoutes = require('./routes/courseRoutes');
+
+// Use routes
+app.use('/api/students', studentRoutes);  // Endpoint for students
+app.use('/api/courses', courseRoutes);    // Endpoint for courses
 
 // Use routes
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/fee', feeRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Server Listening
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
 
 
 
