@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const FeeStructure = require('../models/FeeStructure');
-const Payment = require('../models/Payment');
+// const Payment = require('../models/Payment');
 
 // Get fee structure
 router.get('/structure', async (req, res) => {

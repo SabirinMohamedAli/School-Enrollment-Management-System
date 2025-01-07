@@ -37,7 +37,7 @@ const CoursesPage = () => {
     }
 
     if (!/^[0-9]+$/.test(formData.grade)) {
-      setError('Grade must be a valid number.');
+      setError('Grade must be a valid number');
       return;
     }
 
@@ -78,7 +78,7 @@ const CoursesPage = () => {
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-800">{error}</div>;
   }
 
   return (
